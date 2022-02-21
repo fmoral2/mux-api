@@ -1,0 +1,134 @@
+---
+swagger: "2.0"
+info:
+  description: API
+  version: 1.0.0
+  title: Employees Rain testing
+  contact:
+    email: francisco@hotmail.com
+  license:
+    name: Apache 2.0
+    url: http://localhost:8081/api
+host: virtserver.swaggerhub.com
+basePath: /Francisco-Tecnologia/Index/1.0.0
+schemes:
+- https
+paths:
+  /employess:
+    get:
+      summary: Get all active employess
+      description: |
+        By passing in the appropriate options, you can search for
+        available employees in our db
+      operationId: get emp
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: return all employess
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/userEmployee'
+        "400":
+          description: bad input parameter
+    post:
+      summary: adds an user employee
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user employee
+        description: Add employee
+        required: false
+        schema:
+          $ref: '#/definitions/userEmployee'
+      responses:
+        "201":
+          description: created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing emp already exists
+  /employess/id:
+    get:
+      summary: Get one active employe
+      description: |
+        By passing in the appropriate options, you can search for
+        available employee in our db
+      operationId: get one emp
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        required: false
+        type: uuid
+        in: body 
+        required: true
+        type: json 
+      responses:
+        "200":
+          description: return one employe
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/userEmployee'
+        "400":
+          description: bad input parameter
+        "409":
+          description: emp id does not  exists
+    put:
+      summary: Update one active employe
+      description: |
+        By passing in the appropriate options, you can search for
+        available employee in our db
+      operationId: update one emp
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        required: false
+        type: uuid
+      responses:
+        "200":
+          description: update one employe
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/userEmployee'
+        "400":
+          description: bad input parameter
+        "409":
+          description: emp id does not  exists
+    delete:
+      summary: delete user employee
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        required: false
+        type: uuid
+      responses:
+        "200":
+          description: deleted
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: emp id does not  exists
+definitions:
+  userEmployee:
+    type: object
+    required:
+    - id
+    - name
+    - location
+    - role
+    - wage
