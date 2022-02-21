@@ -9,7 +9,7 @@
 
 ## Important infos:
 
-- The purpose of using Rabbitmq is to publish message ( the whole data of user/employee inside database) to be consumed by the other parser application 
+- The purpose of using Rabbitmq is to publish message (the whole data of user/employee inside database) to be consumed by the other parser application 
 
 
 ```
