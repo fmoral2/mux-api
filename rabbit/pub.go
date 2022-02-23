@@ -8,6 +8,7 @@ import (
 
 	application "github.com/morlfm/rest-api/application/employee"
 	"github.com/morlfm/rest-api/application/model"
+	"github.com/morlfm/rest-api/application/repository"
 	"github.com/streadway/amqp"
 )
 
@@ -42,7 +43,7 @@ func Publish(app *application.App) {
 
 	q, err := ch.QueueDeclare(
 		"TestQueueRain",
-		false,
+		true,
 		false,
 		false,
 		false,
@@ -80,4 +81,12 @@ func Publish(app *application.App) {
 	file.Write(json)
 	file.Close()
 	fmt.Println("Message Published")
+}
+
+func MakeAppRb() {
+	db := repository.CreateConnection()
+	repository := repository.MakeRepository(db)
+
+	app := application.MakeApplication(repository)
+	Publish(app)
 }

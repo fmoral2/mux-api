@@ -8,17 +8,15 @@ import (
 	application "github.com/morlfm/rest-api/application/employee"
 	"github.com/morlfm/rest-api/application/repository"
 	"github.com/morlfm/rest-api/ports/api"
-	"github.com/morlfm/rest-api/rabbit"
 )
 
 func main() {
 
-	// rabbit.Consumer()
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
 
 	app := application.MakeApplication(repository)
-	rabbit.Publish(app)
+	// rabbit.Publish(app)
 
 	handler := api.MakeHandler(app)
 

@@ -36,7 +36,7 @@ func MakeRepository(db *sql.DB) *EmployeePG {
 func (r *EmployeePG) InsertUser(name string, location string, wage float64, role string) (string, error) {
 	var id string
 	empID := uuid.NewString()
-	err := r.db.QueryRow(createEmp, empID, name, location, role, wage).Scan(&id)
+	err := r.db.QueryRow(createEmp, empID, name, location, wage, role).Scan(&id)
 
 	if err != nil {
 		return id, err

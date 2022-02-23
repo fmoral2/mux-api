@@ -14,12 +14,10 @@ type App struct {
 
 func MakeApplication(empDb *repository.EmployeePG) *App {
 	return &App{empRepository: empDb}
-
 }
 
 func (a *App) CreatingEmployeeDb(emp model.Employee) (string, error) {
 	id, err := a.empRepository.InsertUser(emp.Name, emp.Location, emp.Wage, emp.Role)
-
 	return id, err
 }
 
@@ -29,13 +27,16 @@ func (a *App) GetEmployee(emp model.Employee) (model.Employee, error) {
 }
 
 func (a *App) GetEmployees(emp model.Employee) ([]model.Employee, error) {
+	// rbQueue := a.rb
 	emps, err := a.empRepository.GetEmployeesDb()
 	return emps, err
 }
+
 func (a *App) DeleteEmployee(emp model.Employee) (model.Employee, error) {
 	emp, err := a.empRepository.DeleteEmployeeDb(emp.ID)
 	return emp, err
 }
+
 func (a *App) UpdateEmployee(emp model.Employee) (model.Employee, error) {
 	empUp, err := a.empRepository.UpdateEmployeeDb(emp)
 	return empUp, err
@@ -51,5 +52,4 @@ func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
-
 }

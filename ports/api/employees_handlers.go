@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	application "github.com/morlfm/rest-api/application/employee"
 	"github.com/morlfm/rest-api/application/model"
+	"github.com/morlfm/rest-api/rabbit"
 )
 
 var (
@@ -130,5 +131,6 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	emp.ID = id
 
+	rabbit.MakeAppRb()
 	application.RespondWithJSON(w, http.StatusCreated, emp)
 }
