@@ -12,9 +12,8 @@
 - The purpose of using Rabbitmq is to publish message (the whole data of user/employee inside database) to be consumed by the other parser application 
 
 
-```
-https://github.com/morlfm/RainTest 
-```
+   - https://github.com/morlfm/RainTest 
+
 
 - It was not created a Graceful shutdown just for purposes of who wants to use this project example to have a easy way to test and play arround wiht the api through postman, Curl or whatever :) 
 
