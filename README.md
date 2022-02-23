@@ -9,7 +9,7 @@
 
 ## Important infos:
 
-- The purpose of using Rabbitmq is to publish message (the whole data of user/employee inside database) to be consumed by the other parser application 
+- This project is to do examples with mux server and generate a way to trigger the changes on DB made by api requests to a Queue that will be consumed and parsed by another project
 
 
    - https://github.com/morlfm/RainTest 
@@ -18,11 +18,6 @@
 - It was not created a Graceful shutdown just for purposes of who wants to use this project example to have a easy way to test and play arround wiht the api through postman, Curl or whatever :) 
 
 - In this example it was used postgrees databse with Cloud Based: https://www.elephantsql.com but you can use with docker or local 
-
-## Summary
-
-- This project is to
-
 
 ## Environment variables (direnv)
 
