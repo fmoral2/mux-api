@@ -52,7 +52,7 @@ $ make mux-server-up&pub-queue
 $ make run-tests
 ```
 
-- To remove rabbir container
+- To remove rabbit container
 
 ```
 $ rabbit-server-removal

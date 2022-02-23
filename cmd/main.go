@@ -14,12 +14,8 @@ func main() {
 
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
-
 	app := application.MakeApplication(repository)
-	// rabbit.Publish(app)
-
 	handler := api.MakeHandler(app)
-
 	router := mux.NewRouter()
 	handler.MakingRoutes(router)
 	log.Fatal(http.ListenAndServe(":8081", router))
