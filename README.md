@@ -37,7 +37,7 @@ export POSTGRES_URL="${POSTGRES_URL}"
 - To start Rabbit docker 
 
 ```
-$ rabbit-server-up
+$ make rabbit-server-up
 ```
 
 - To start mux and application:
@@ -55,7 +55,7 @@ $ make run-tests
 - To remove rabbit container
 
 ```
-$ rabbit-server-removal
+$ make rabbit-server-removal
 ```
 
 ## Database used to store correct data (employees)
