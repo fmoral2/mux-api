@@ -43,7 +43,7 @@ $ rabbit-server-up
 - To start mux and application:
 
 ```
-$ make mux-server-up&pub-queue
+$ make mux-server-up
 ```
 
 - To run tests
