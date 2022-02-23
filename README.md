@@ -60,7 +60,7 @@ $ make rabbit-server-removal
 
 ## Database used to store correct data (employees)
 
-Postgress
+- Postgress
 
 
 ## To make requests:
