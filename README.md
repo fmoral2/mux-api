@@ -13,7 +13,7 @@
 
 
 ```
-https://github.com/morlfm/rainTest
+https://github.com/morlfm/RainTest 
 ```
 
 - It was not created a Graceful shutdown just for purposes of who wants to use this project example to have a easy way to test and play arround wiht the api through postman, Curl or whatever :) 
