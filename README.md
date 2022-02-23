@@ -62,6 +62,12 @@ $ make rabbit-server-removal
 
 Postgress
 
+
+## To make requests:
+ - http://localhost:8081/api/employees
+ - http://localhost:8081/api/employees/{id}
+
+
 ## Architeture and packages in golang format of 
 
 - Application where resided the logic and businees rules
