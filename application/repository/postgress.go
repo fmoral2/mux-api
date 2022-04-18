@@ -10,7 +10,7 @@ import (
 
 func CreateConnection() *sql.DB {
 
-	// Open the connection
+	// Open the connection with database
 	db, err := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
 
 	if err != nil {

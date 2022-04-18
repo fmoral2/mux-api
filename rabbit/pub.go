@@ -42,7 +42,7 @@ func Publish(app *application.App) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"TestQueueRain",
+		"TestQueue",
 		true,
 		false,
 		false,
@@ -57,7 +57,7 @@ func Publish(app *application.App) {
 	// publish a message
 	err = ch.Publish(
 		"",
-		"TestQueueRain",
+		"TestQueue",
 		false,
 		false,
 		amqp.Publishing{

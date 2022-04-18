@@ -2,14 +2,21 @@ package api
 
 import (
 	"github.com/gorilla/mux"
-	application "github.com/morlfm/rest-api/application/employee"
+	"github.com/morlfm/rest-api/application/model"
 )
 
 type EmpHandler struct {
-	app *application.App
+	app EmpApp
+}
+type EmpApp interface {
+	CreatingEmployeeDb(emp model.Employee) (string, error)
+	GetEmployee(emp model.Employee) (model.Employee, error)
+	GetEmployees(emp model.Employee) ([]model.Employee, error)
+	DeleteEmployee(emp model.Employee) (model.Employee, error)
+	UpdateEmployee(emp model.Employee) (model.Employee, error)
 }
 
-func MakeHandler(appEmp *application.App) *EmpHandler {
+func MakeHandler(appEmp EmpApp) *EmpHandler {
 	return &EmpHandler{app: appEmp}
 }
 

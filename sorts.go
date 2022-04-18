@@ -1,6 +1,5 @@
 package api
 
-// buble sort an array of int
 func BubbleSort() []int {
 	n := []int{3, 2, 4, 3}
 	for i := 0; i < len(n); i++ {

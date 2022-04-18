@@ -17,7 +17,7 @@ func MakeApplication(empDb *repository.EmployeePG) *App {
 }
 
 func (a *App) CreatingEmployeeDb(emp model.Employee) (string, error) {
-	id, err := a.empRepository.InsertUser(emp.Name, emp.Location, emp.Wage, emp.Role)
+	id, err := a.empRepository.CreateEmployeeDb(emp.Name, emp.Location, emp.Wage, emp.Role)
 	return id, err
 }
 
@@ -27,7 +27,6 @@ func (a *App) GetEmployee(emp model.Employee) (model.Employee, error) {
 }
 
 func (a *App) GetEmployees(emp model.Employee) ([]model.Employee, error) {
-	// rbQueue := a.rb
 	emps, err := a.empRepository.GetEmployeesDb()
 	return emps, err
 }

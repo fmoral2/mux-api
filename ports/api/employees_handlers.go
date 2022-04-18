@@ -18,7 +18,7 @@ var (
 )
 
 func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
-	// set header needed
+	// set header
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	id := params["id"]

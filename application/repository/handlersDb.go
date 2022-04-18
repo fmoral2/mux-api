@@ -33,7 +33,7 @@ func MakeRepository(db *sql.DB) *EmployeePG {
 	return &EmployeePG{db: db}
 }
 
-func (r *EmployeePG) InsertUser(name string, location string, wage float64, role string) (string, error) {
+func (r *EmployeePG) CreateEmployeeDb(name string, location string, wage float64, role string) (string, error) {
 	var id string
 	empID := uuid.NewString()
 	err := r.db.QueryRow(createEmp, empID, name, location, wage, role).Scan(&id)
@@ -64,6 +64,8 @@ func (r *EmployeePG) GetEmployeesDb() ([]model.Employee, error) {
 	defer rows.Close()
 
 	emps := []model.Employee{}
+
+	//
 	for rows.Next() {
 		var emp model.Employee
 		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Location, &emp.Wage, &emp.Role); err != nil {
