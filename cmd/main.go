@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/morlfm/rest-api/adapters/rabbit"
+	"github.com/morlfm/rest-api/adapters/repository"
 	application "github.com/morlfm/rest-api/application/employee"
-	"github.com/morlfm/rest-api/application/repository"
-	"github.com/morlfm/rest-api/ports/api"
-	"github.com/morlfm/rest-api/rabbit"
+	api "github.com/morlfm/rest-api/ports/rest"
 )
 
 func main() {

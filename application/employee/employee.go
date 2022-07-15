@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/morlfm/rest-api/adapters/repository"
 	"github.com/morlfm/rest-api/application/model"
-	"github.com/morlfm/rest-api/application/repository"
 )
 
 type App struct {
