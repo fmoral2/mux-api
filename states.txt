@@ -1,0 +1,7 @@
+RPUSH lms_events  "id 1234 eventxID 0101df"
+RPUSH lms_events "id 34few eventxID 0101df"
+RPUSH lms_events  "id 2ee2 eventxID 0101df"
+RPUSH lms_events  "id qwe eventxID 0101df"
+RPUSH lms_events "id 23eda eventxID 0101df"
+RPUSH lms_events "id 2342dwe eventxID 0101df"
+RPUSH lms_events  "id 342edswfs eventxID 0101df"

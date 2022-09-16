@@ -3,21 +3,20 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	_ "github.com/lib/pq"
 )
 
 func CreateConnection() *sql.DB {
 
-	// Open the connection with database
-	db, err := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
-
+	connStr := "user=postgres dbname=postgres password=000 sslmode=disable host=localhost port=5432"
+	db, err := sql.Open("postgres", connStr)
+	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println("Successfully connected!")
-	// return the connection
+
 	return db
 }

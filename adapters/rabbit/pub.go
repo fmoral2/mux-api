@@ -84,7 +84,7 @@ func Publish(app *application.App) {
 	fmt.Println("Message Published")
 }
 
-func MakeAppRb() {
+func MakeAppRb(*model.Employee) {
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
 

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: employees
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=000
+      - TZ=UTC
+    volumes: 
+      - "repository:/var/lib/postgresql/data"
+      - "./adapters/repository/init.sql:/docker-entrypoint-initdb.d/create_tables.sql"
+    networks:
+      - m_network
+
+  rabbitmq:
+    image: rabbitmq:3.8.9-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - TZ=UTC
+    networks:
+      - m_network
+volumes:
+  repository:
+    driver: local
+networks:
+  m_network:
+    driver: bridge
+    name: m_network
+

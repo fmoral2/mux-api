@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	// employees []repository.EmployeeDb
 	emp model.Employee
 )
 
@@ -112,7 +111,6 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// validating request body cannot have empty name or role
 	errs := model.EmptyName(&emp)
 	if errs != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "missing name")
@@ -131,6 +129,6 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	emp.ID = id
 
-	rabbit.MakeAppRb()
+	rabbit.MakeAppRb(&emp)
 	application.RespondWithJSON(w, http.StatusCreated, emp)
 }

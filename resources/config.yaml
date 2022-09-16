@@ -1,0 +1,15 @@
+# environment: 'localhost'
+
+# server:
+#   port: 8001
+#   idle-timeout: 120
+#   read-timeout: 5
+#   write-timeout: 10
+
+# database:
+#   host: 'localhost'
+#   port: 5432
+#   max-open-connections: 10
+#   max-idle-connections: 5
+#   ssl-mode: disable
+#   name: employees

@@ -48,7 +48,7 @@ func (r *EmployeePG) CreateEmployeeDb(name string, location string, wage float64
 func (r *EmployeePG) GetEmployeeDb(id string) (model.Employee, error) {
 
 	e := EmployeeDb{}
-	err := r.db.QueryRow(getEmp, id).Scan(&e.Name, &e.ID, &e.Location, &e.Role, &e.Location)
+	err := r.db.QueryRow(getEmp, id).Scan(&e.ID, &e.Name, &e.Location, &e.Role, &e.Location)
 	emp := model.Employee{ID: e.ID, Name: e.Name, Location: e.Location, Role: e.Role, Wage: e.Wage}
 
 	return emp, err
@@ -65,7 +65,6 @@ func (r *EmployeePG) GetEmployeesDb() ([]model.Employee, error) {
 
 	emps := []model.Employee{}
 
-	//
 	for rows.Next() {
 		var emp model.Employee
 		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Location, &emp.Wage, &emp.Role); err != nil {

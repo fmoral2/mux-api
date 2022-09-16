@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/newrelic/go-agent/v3/newrelic"
+
 	"github.com/gorilla/mux"
 	"github.com/morlfm/rest-api/adapters/rabbit"
 	"github.com/morlfm/rest-api/adapters/repository"
@@ -12,6 +14,12 @@ import (
 )
 
 func main() {
+
+	_, _ = newrelic.NewApplication(
+		newrelic.ConfigAppName("TEST-mux"),
+		newrelic.ConfigLicense("8e192759449a29e8ab34f9b9a3e4354e7ca1NRAL"),
+		newrelic.ConfigAppLogForwardingEnabled(true),
+	)
 
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
