@@ -1,8 +1,6 @@
-include ./config.mk
-
 SHELL := /bin/bash
 CONTAINER_NAME := some-rabbit
-
+PATHS = ./application/... ./cmd/... ./ports/... ./adapters/...
 
 mux-server-up && rabbit:
 	# @docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management 
@@ -16,3 +14,12 @@ rabbit-server-removal:
 	@docker rm ${CONTAINER_NAME}
 
 run-tests:
+
+lint:
+	@echo "Linting..."
+	@golangci-lint run 
+
+vet:
+	@echo "Vetting..."
+	@go vet $(PATHS)
+
