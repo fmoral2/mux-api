@@ -74,7 +74,7 @@ func Publish(app *application.App) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	file, err := os.Create("../rabbit/outputs/pub.json")
+	file, err := os.Create("adapters/rabbit/outputs/pub.json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -84,7 +84,7 @@ func Publish(app *application.App) {
 	fmt.Println("Message Published")
 }
 
-func MakeAppRb(*model.Employee) {
+func MakeAppRb() {
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
 

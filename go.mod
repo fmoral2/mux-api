@@ -1,6 +1,6 @@
 module github.com/morlfm/rest-api
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gorilla/mux v1.8.0
@@ -29,7 +29,7 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/newrelic/go-agent/v3 v3.19.0
+	github.com/newrelic/go-agent/v3 v3.19.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.1.0 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90

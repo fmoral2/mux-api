@@ -1,4 +1,4 @@
-// package main
+package main
 
 // v = len(n)/ 2
 // start compare first element x last element on the chain  v = len(n)/ 2 , if i > j swap,

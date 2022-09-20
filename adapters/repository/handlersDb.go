@@ -67,7 +67,7 @@ func (r *EmployeePG) GetEmployeesDb() ([]model.Employee, error) {
 
 	for rows.Next() {
 		var emp model.Employee
-		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Location, &emp.Wage, &emp.Role); err != nil {
+		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Role, &emp.Wage, &emp.Location); err != nil {
 			return nil, err
 		}
 

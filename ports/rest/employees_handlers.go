@@ -14,6 +14,7 @@ import (
 
 var (
 	emp model.Employee
+	//employees []model.Employee
 )
 
 func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +40,7 @@ func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(emp)
 }
 
+//todo pagination
 func (a *EmpHandler) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	// set header
 	w.Header().Set("Content-Type", "application/json")
@@ -109,7 +111,7 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	if err := decoder.Decode(&emp); err != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "Invalid request")
 	}
-	defer r.Body.Close()
+	r.Body.Close()
 
 	errs := model.EmptyName(&emp)
 	if errs != nil {
@@ -129,6 +131,8 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	emp.ID = id
 
-	rabbit.MakeAppRb(&emp)
+	r.Body.Close()
+
+	rabbit.MakeAppRb()
 	application.RespondWithJSON(w, http.StatusCreated, emp)
 }
