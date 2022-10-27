@@ -8,8 +8,8 @@ ENV APP_NAME ${APP_NAME}
 ENV PATH="/opt/go/bin:${PATH}"
 WORKDIR /opt/go/bin/
 
-COPY . .
-COPY ./resources/config*.yml ./resources/
+COPY .. .
+COPY ./deploy/docker-compose*.yml ./deploy/
 RUN apk add --update alpine-sdk
 RUN go mod tidy
 RUN go build -o main github.com/morlfm/rest-api
