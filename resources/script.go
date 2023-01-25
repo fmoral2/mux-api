@@ -1,4 +1,4 @@
-package main
+package resources
 
 import (
 	"fmt"
@@ -34,7 +34,7 @@ func postAPI() {
 
 	for _, v := range users {
 		for i := 0; i < 10; i++ {
-			s := randString()
+			s := RandString()
 			randRoles := randRole()
 			fmt.Println(randRoles)
 			randF := rand.Float64()
@@ -47,7 +47,7 @@ func postAPI() {
 	}
 }
 
-func randString() string {
+func RandString() string {
 	const letterBytes = "abcdefghijklmnopqrstuvwxyz"
 
 	lenght := 6

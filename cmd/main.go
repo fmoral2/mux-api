@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"runtime"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/morlfm/rest-api/adapters/rabbit"
@@ -14,12 +15,9 @@ import (
 )
 
 func main() {
-
-	_, _ = newrelic.NewApplication(
-		newrelic.ConfigAppName("TEST-mux"),
-		newrelic.ConfigLicense("8e192759449a29e8ab34f9b9a3e4354e7ca1NRAL"),
-		newrelic.ConfigAppLogForwardingEnabled(true),
-	)
+	////cognito.Cognito()
+	var ms runtime.MemStats
+	printMemStat(ms)
 
 	db := repository.CreateConnection()
 	repository := repository.MakeRepository(db)
@@ -31,4 +29,19 @@ func main() {
 	router := mux.NewRouter()
 	handler.MakingRoutes(router)
 	log.Fatal(http.ListenAndServe(":8081", router))
+}
+
+func printMemStat(ms runtime.MemStats) {
+	runtime.ReadMemStats(&ms)
+	fmt.Println("--------------------------------------")
+	fmt.Println("Memory Statistics Reporting time: ", time.Now())
+	fmt.Println("--------------------------------------")
+	fmt.Println("Bytes of allocated heap objects: ", ms.Alloc)
+	fmt.Println("Total bytes of Heap object: ", ms.TotalAlloc)
+	fmt.Println("Bytes of memory obtained from OS: ", ms.Sys)
+	fmt.Println("Count of heap objects: ", ms.Mallocs)
+	fmt.Println("Count of heap objects freed: ", ms.Frees)
+	fmt.Println("Count of live heap objects", ms.Mallocs-ms.Frees)
+	fmt.Println("Number of completed GC cycles: ", ms.NumGC)
+	fmt.Println("--------------------------------------")
 }

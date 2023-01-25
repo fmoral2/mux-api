@@ -17,6 +17,16 @@ services:
     networks:
       - m_network
 
+#  wiremock:
+#    image: wiremock/wiremock:2.32.0-alpine
+#    container_name: mux_wiremock
+#    ports:
+#      - "8091:8080"
+#    volumes:
+#      - "./wiremock:/home/wiremock"
+#    networks:
+#      - m_network
+
   rabbitmq:
     image: rabbitmq:3.8.9-management
     container_name: rabbitmq
@@ -37,4 +47,3 @@ networks:
   m_network:
     driver: bridge
     name: m_network
-

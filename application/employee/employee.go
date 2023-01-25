@@ -31,6 +31,12 @@ func (a *App) GetEmployees(emp model.Employee) ([]model.Employee, error) {
 	return emps, err
 }
 
+func (a *App) GetFilterEmployees(emp model.Employee, pageParams model.PageRequest) (interface{}, error) {
+	pageParam := pageParams.WithDefaultValues()
+	emps, err := a.empRepository.GetEmployeesFilterDb(pageParam.Page, pageParam.Size)
+	return emps, err
+}
+
 func (a *App) DeleteEmployee(emp model.Employee) (model.Employee, error) {
 	emp, err := a.empRepository.DeleteEmployeeDb(emp.ID)
 	return emp, err

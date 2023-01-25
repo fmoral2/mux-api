@@ -3,13 +3,15 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
-	"net/http"
-
+	"errors"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/morlfm/rest-api/adapters/rabbit"
 	application "github.com/morlfm/rest-api/application/employee"
 	"github.com/morlfm/rest-api/application/model"
+	checks "github.com/morlfm/rest-api/resources"
+	"net/http"
+	"strconv"
 )
 
 var (
@@ -39,8 +41,6 @@ func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(emp)
 }
-
-//todo pagination
 func (a *EmpHandler) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	// set header
 	w.Header().Set("Content-Type", "application/json")
@@ -48,6 +48,27 @@ func (a *EmpHandler) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	e := model.Employee{}
 	emps, err := a.app.GetEmployees(e)
 
+	if err != nil {
+
+		return
+	}
+	json.NewEncoder(w).Encode(emps)
+}
+
+func (a *EmpHandler) GetFilterEmployees(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	pageReq, err := getPageRequest(r)
+	if err != nil {
+		errors.New("bad request")
+	}
+
+	// set header
+	w.Header().Set("Content-Type", "application/json")
+
+	e := model.Employee{}
+	emps, err := a.app.GetFilterEmployees(e, pageReq)
 	if err != nil {
 
 		return
@@ -135,4 +156,29 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 
 	rabbit.MakeAppRb()
 	application.RespondWithJSON(w, http.StatusCreated, emp)
+}
+
+func getPageRequest(r *http.Request) (model.PageRequest, error) {
+	var page int64
+	var size int64
+	var err error
+
+	if checks.StringIsNotEmpty(r.URL.Query().Get("page")) {
+		page, err = strconv.ParseInt(r.URL.Query().Get("page"), 10, 64)
+		if err != nil {
+			return model.PageRequest{}, err
+		}
+	}
+
+	if checks.StringIsNotEmpty(r.URL.Query().Get("size")) {
+		size, err = strconv.ParseInt(r.URL.Query().Get("size"), 10, 64)
+		if err != nil {
+			return model.PageRequest{}, err
+		}
+	}
+
+	return model.PageRequest{
+		Page: page,
+		Size: size,
+	}, nil
 }

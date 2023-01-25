@@ -1,0 +1,63 @@
+include:
+  - project: 'platform/gitlab-pipelines'
+    file: '.gitlab-ci-template.yml'
+    ref: 'v1.1.0'
+
+variables:
+  IMAGE_GOLANG: 407145123448.dkr.ecr.us-east-1.amazonaws.com/rain/ci/golang:1.16.15
+  IMAGE_ECS: 407145123448.dkr.ecr.us-east-1.amazonaws.com/rain/ci/ecs:3
+  IMAGE_NODE: node:10.16.3
+  DOCS_PATH: "api-release/api.yaml"
+  MIGRATION_ENABLED: "true"
+  MIGRATION_PATH: "resources/migrations"
+  DEPLOY_TYPE: "ECR"
+  SLACK_NOTIFICATION_CHANNELS: "gitlab"
+  SLACK_DEPLOY_NOTIFICATION_CHANNELS: "global-ledger-deployment,deploys"
+
+dev-status:eu:
+  rules:
+    - when: never
+
+dev-migration:eu:
+  rules:
+    - when: never
+
+dev-migration-rollback:eu:
+  rules:
+    - when: never
+
+dev-deploy:eu:
+  rules:
+    - when: never
+
+stg-status:eu:
+  rules:
+    - when: never
+
+stg-migration:eu:
+  rules:
+    - when: never
+
+stg-migration-rollback:eu:
+  rules:
+    - when: never
+
+stg-deploy:eu:
+  rules:
+    - when: never
+
+prd-status:eu:
+  rules:
+    - when: never
+
+prd-migration:eu:
+  rules:
+    - when: never
+
+prd-migration-rollback:eu:
+  rules:
+    - when: never
+
+prd-deploy:eu:
+  rules:
+    - when: never

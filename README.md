@@ -1,4 +1,4 @@
-## GOLANG MUX api + Postgress + RabbitMq
+## GOLANG Mux + Postgres + RabbitMq + Cognito
 
 ## Dependencies
 
@@ -12,7 +12,7 @@
 - This project is to do examples with mux server and generate a way to trigger the changes on DB made by api requests to a Queue that will be consumed and parsed by another project
 
 
-   - https://github.com/morlfm/RainTest 
+   - https://github.com/morlfm/parser
 
 
 - It was not created a Graceful shutdown just for purposes of who wants to use this project example to have a easy way to test and play arround wiht the api through postman, Curl or whatever :) 

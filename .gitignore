@@ -1,3 +1,6 @@
+app.env
 .env
 .vscode
-/rand
+/resources/rand
+cmd/static/src/auth_config.json
+node_modules

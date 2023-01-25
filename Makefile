@@ -1,19 +1,21 @@
 SHELL := /bin/bash
-CONTAINER_NAME := some-rabbit
+CONTAINER_NAME_QUEUE := rabbitmq
+CONTAINER_NAME_PG := employees
 PATHS = ./application/... ./cmd/... ./ports/... ./adapters/...
 
-mux-server-up && rabbit:
-	# @docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management 
-	@export POSTGRES_URL="${POSTGRES_URL}"
+server-up:
+	@docker compose up -d
 	@cd cmd && go run main.go
 
-rabbit-server-removal:
-	@echo Stopping ${CONTAINER_NAME} && echo "OK"
-	@docker stop ${CONTAINER_NAME}
-	@echo Removing ${CONTAINER_NAME} && echo "OK"
-	@docker rm ${CONTAINER_NAME}
+server-down:
+	@echo Stopping ${CONTAINER_NAME_QUEUE} && echo "OK"
+	@docker stop ${CONTAINER_NAME_QUEUE}
+	@echo Removing ${CONTAINER_NAME_PG} && echo "OK"
+	@docker rm ${CONTAINER_NAME_PG}
 
-run-tests:
+run-load-tests:
+	@echo "Running load tests"
+	@cd resources && k6	run load.js
 
 lint:
 	@echo "Linting..."

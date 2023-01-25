@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.17-alpine
+FROM golang:1.18-alpine
 
 ARG APP_NAME
 ENV APP_NAME ${APP_NAME}
@@ -12,6 +12,4 @@ COPY .. .
 COPY ./deploy/docker-compose*.yml ./deploy/
 RUN apk add --update alpine-sdk
 RUN go mod tidy
-RUN go build -o main github.com/morlfm/rest-api
-RUN chmod +x /GO
 CMD ["./main"]

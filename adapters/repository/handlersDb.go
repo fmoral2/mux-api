@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"math"
 
 	"github.com/google/uuid"
 	"github.com/morlfm/rest-api/application/model"
@@ -11,10 +12,12 @@ import (
 
 const (
 	getEmp       = "SELECT id,name,location,role,wage FROM employeesDb WHERE id=$1"
-	getEmployess = "SELECT * FROM employeesDb"
+	getEmployess = "SELECT id,name,location,wage,role  FROM employeesDb ORDER BY id ASC  OFFSET $1 LIMIT $2 "
+	getAll       = "SELECT id,name,location,wage,role FROM employeesDb"
 	updateEmp    = "UPDATE employeesDb SET name=$1,location=$2 WHERE id=$3 RETURNING id , name, location"
 	deleteEmp    = "DELETE FROM employeesDb WHERE id=$1"
 	createEmp    = "INSERT INTO employeesDb(id,name,location,wage,role) VALUES($1,$2,$3,$4,$5) RETURNING id"
+	getEmpsCount = "SELECT COUNT(*) FROM employeesDb"
 )
 
 type EmployeePG struct {
@@ -48,7 +51,7 @@ func (r *EmployeePG) CreateEmployeeDb(name string, location string, wage float64
 func (r *EmployeePG) GetEmployeeDb(id string) (model.Employee, error) {
 
 	e := EmployeeDb{}
-	err := r.db.QueryRow(getEmp, id).Scan(&e.ID, &e.Name, &e.Location, &e.Role, &e.Location)
+	err := r.db.QueryRow(getEmp, id).Scan(&e.ID, &e.Name, &e.Location, &e.Role, &e.Wage)
 	emp := model.Employee{ID: e.ID, Name: e.Name, Location: e.Location, Role: e.Role, Wage: e.Wage}
 
 	return emp, err
@@ -56,26 +59,74 @@ func (r *EmployeePG) GetEmployeeDb(id string) (model.Employee, error) {
 
 func (r *EmployeePG) GetEmployeesDb() ([]model.Employee, error) {
 
-	rows, err := r.db.Query(getEmployess)
+	rows, err := r.db.Query(getAll)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
-	emps := []model.Employee{}
+	var emps []model.Employee
 
 	for rows.Next() {
 		var emp model.Employee
-		if err := rows.Scan(&emp.ID, &emp.Name, &emp.Role, &emp.Wage, &emp.Location); err != nil {
+		if err = rows.Scan(&emp.ID, &emp.Name, &emp.Role, &emp.Wage, &emp.Location); err != nil {
 			return nil, err
 		}
 
 		emps = append(emps, emp)
 
 	}
+	return emps, nil
 
-	return emps, err
+}
+func (r *EmployeePG) GetEmployeesFilterDb(page int64, size int64) (interface{}, error) {
+	if size == 0 {
+		return model.PageResponse{}, nil
+	}
+
+	limit := size
+	offSet := page * size
+
+	rows, err := r.db.Query(getEmployess, offSet, limit)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var emps []model.Employee
+
+	for rows.Next() {
+		var emp model.Employee
+		if err = rows.Scan(&emp.ID, &emp.Name, &emp.Role, &emp.Wage, &emp.Location); err != nil {
+			return nil, err
+		}
+
+		emps = append(emps, emp)
+
+	}
+	var count int64
+	countRows, err := r.db.Query(getEmpsCount)
+	if err != nil {
+		return nil, err
+	}
+	for countRows.Next() {
+		if err = countRows.Scan(&count); err != nil {
+			return count, nil
+		}
+
+	}
+	employeesResponse := model.EmployeesResponse{
+		Items: emps,
+		PageResponse: model.PageResponse{
+			Page:       page,
+			TotalItems: count,
+			TotalPages: int64(math.Ceil(float64(count) / float64(size))),
+		},
+	}
+
+	return employeesResponse, err
 }
 
 func (r *EmployeePG) DeleteEmployeeDb(id string) (model.Employee, error) {

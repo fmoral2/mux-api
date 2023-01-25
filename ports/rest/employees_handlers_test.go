@@ -33,8 +33,8 @@ func TestGetEmployees(t *testing.T) {
 		},
 	}
 
-	appEmpMock.On("GetEmployees", model.Employee{}).Return(mockList, nil)
-	target.GetEmployees(resp, req)
+	appEmpMock.On("GetFilterEmployees", model.Employee{}).Return(mockList, nil)
+	target.GetFilterEmployees(resp, req)
 
 	response := resp.Result()
 	data, _ := ioutil.ReadAll(response.Body)

@@ -1,0 +1,34 @@
+include:
+  - local: '/common/.gitlab-ci-common.yml'
+  - local: '/script/.docker-login-ecr.yml'
+  - local: '/script/.gitlab-auth.yml'
+  - local: '/script/.install-curl.yml'
+  - local: '/script/.install-nc.yml'
+  - local: '/script/.install-zip.yml'
+  - local: '/script/.slack-integration.yml'
+  - local: '/script/.migration-order.yml'
+  - local: '/script/.migration-rollback.yml'
+  - local: '/script/.changelog.yml'
+  - local: '/template/.gitlab-ci-template-quality.yml'
+  - local: '/template/.gitlab-ci-template-build.yml'
+  - local: '/template/.gitlab-ci-template-status.yml'
+  - local: '/template/.gitlab-ci-template-migration.yml'
+  - local: '/template/.gitlab-ci-template-migration-rollback.yml'
+  - local: '/template/.gitlab-ci-template-deploy-ecr.yml'
+  - local: '/template/.gitlab-ci-template-deploy-lib.yml'
+
+stages:
+  - quality
+  - build
+  - dev-status
+  - dev-migration
+  - dev-migration-rollback
+  - dev-deploy
+  - staging-status
+  - staging-migration
+  - staging-migration-rollback
+  - staging-deploy
+  - production-status
+  - production-migration
+  - production-migration-rollback
+  - production-deploy

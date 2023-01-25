@@ -4,21 +4,44 @@ import { Rate } from "k6/metrics";
 
 new Rate("check_failure_rate");
 
-export let options = {
+export const options = {
+//Stress Testing is a type of load testing used to determine the limits of the system.
+// The purpose of this test is to verify the stability and reliability of the system under extreme conditions.
+  stages: [
+
+    { duration: '2m', target: 100 }, // below normal load
+
+    { duration: '5m', target: 100 },
+
+    { duration: '2m', target: 200 }, // normal load
+
+    { duration: '5m', target: 200 },
+
+    { duration: '2m', target: 300 }, // around the breaking point
+
+    { duration: '5m', target: 300 },
+
+    { duration: '2m', target: 400 }, // beyond the breaking point
+
+    { duration: '5m', target: 400 },
+
+    { duration: '10m', target: 0 }, // scale down. Recovery stage.
+
+  ],
+
 
   insecureSkipTLSVerify: true,
   noConnectionReuse: false,
   vus: 100,
-  duration: '10s',
-  iterations: 1000,
   thresholds: {
-    "http_req_duration": ["p(95)<500"],
-    "check_failure_rate": [ "rate<0.01"]
+    // 99% of requests must complete below 1.5s
+    "http_req_duration": ["p(99)<500"],
+    "check_failure_rate": ["rate<0.01"],
+    "http_reqs": ["rate<=600"],
   }
 };
-export default function () {
 
+export default function () {
   http.get('http://localhost:8081/api/employees');
   sleep(1);
-
 }
