@@ -29,7 +29,6 @@ func (a *EmpHandler) MakingRoutes(r *mux.Router) {
 		newrelic.ConfigAppLogForwardingEnabled(true),
 	)
 	r.HandleFunc(newrelic.WrapHandleFunc(appNew, "/api/employees", a.GetEmployees)).Methods("GET")
-	//r.HandleFunc("/api/employees", a.GetEmployees).Methods("GET")
 	r.HandleFunc("/api/employees/filter", a.GetFilterEmployees).Methods("GET")
 	r.HandleFunc("/api/employees/{id}", a.GetSingleEmployee).Methods("GET")
 	r.HandleFunc("/api/employees/{id}", a.DeleteEmployee).Methods("DELETE")

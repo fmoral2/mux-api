@@ -4,14 +4,15 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/morlfm/rest-api/adapters/rabbit"
 	application "github.com/morlfm/rest-api/application/employee"
 	"github.com/morlfm/rest-api/application/model"
 	checks "github.com/morlfm/rest-api/resources"
-	"net/http"
-	"strconv"
 )
 
 var (
