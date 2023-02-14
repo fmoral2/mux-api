@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"runtime"
+	"runtime/trace"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -15,20 +17,47 @@ import (
 )
 
 func main() {
-	////cognito.Cognito()
-	var ms runtime.MemStats
-	printMemStat(ms)
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
+	f, err := os.Create("trace.out")
+	if err != nil {
+		log.Fatalf("Failed to create trace file: %v", err)
+	}
+
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Fatalf("Failed to close trace file: %v", err)
+		}
+	}()
+
+	err = trace.Start(f)
+	if err != nil {
+		log.Fatalf("Failed to start tracing: %v", err)
+	}
+	defer trace.Stop()
+
+	// //cognito.Cognito()
+	go func() {
+		for {
+			var ms runtime.MemStats
+			printMemStat(ms)
+			time.Sleep(3 * time.Minute)
+		}
+	}()
 
 	db := repository.CreateConnection()
-	repository := repository.MakeRepository(db)
+	rep := repository.MakeRepository(db)
 
-	app := application.MakeApplication(repository)
+	app := application.MakeApplication(rep)
 	rabbit.Publish(app)
 
 	handler := api.MakeHandler(app)
 	router := mux.NewRouter()
-	handler.MakingRoutes(router)
+	handler.Routes(router)
 	log.Fatal(http.ListenAndServe(":8081", router))
+
 }
 
 func printMemStat(ms runtime.MemStats) {

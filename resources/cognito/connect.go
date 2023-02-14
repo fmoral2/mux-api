@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	resources "github.com/morlfm/rest-api/resources"
+	"github.com/morlfm/rest-api/resources"
 )
 
 func Cognito() {

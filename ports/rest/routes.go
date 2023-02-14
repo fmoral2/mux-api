@@ -22,7 +22,7 @@ func MakeHandler(appEmp EmpApp) *EmpHandler {
 	return &EmpHandler{app: appEmp}
 }
 
-func (a *EmpHandler) MakingRoutes(r *mux.Router) {
+func (a *EmpHandler) Routes(r *mux.Router) {
 	appNew, _ := newrelic.NewApplication(
 		newrelic.ConfigAppName("mux-test"),
 		newrelic.ConfigLicense("8e192759449a29e8ab34f9b9a3e4354e7ca1NRAL"),

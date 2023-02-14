@@ -17,11 +17,10 @@ import (
 
 var (
 	emp model.Employee
-	//employees []model.Employee
+	// employees []model.Employee
 )
 
 func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
-	// set header
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	id := params["id"]
@@ -31,7 +30,7 @@ func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
 	if _, err := a.app.GetEmployee(e); err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			application.RespondWithError(w, http.StatusBadRequest, "not found")
+			application.RespondWithError(w, http.StatusNotFound, " emp not found")
 			return
 		default:
 			application.RespondWithError(w, http.StatusBadRequest, "wrong id")
@@ -43,7 +42,6 @@ func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(emp)
 }
 func (a *EmpHandler) GetEmployees(w http.ResponseWriter, r *http.Request) {
-	// set header
 	w.Header().Set("Content-Type", "application/json")
 
 	e := model.Employee{}
@@ -78,28 +76,24 @@ func (a *EmpHandler) GetFilterEmployees(
 }
 
 func (a *EmpHandler) DeleteEmployee(w http.ResponseWriter, r *http.Request) {
-	//set header
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	// validating id format
 	id := params["id"]
 	if _, err := uuid.Parse(id); err != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "wrong id")
 		return
 	}
 
-	// validating id in Db
 	e := model.Employee{ID: id}
 	if _, err := a.app.DeleteEmployee(e); err != nil {
-		application.RespondWithError(w, http.StatusInternalServerError, "not found")
+		application.RespondWithError(w, http.StatusNotFound, "emp not found or already deleted")
 		return
 	}
 	application.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 func (a *EmpHandler) UpdateEmployee(w http.ResponseWriter, r *http.Request) {
-	// set header
 	w.Header().Set("Content-Type", "application/json")
 
 	params := mux.Vars(r)
@@ -126,7 +120,6 @@ func (a *EmpHandler) UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
-	// set header needed
 	w.Header().Set("Content-Type", "application/json")
 
 	decoder := json.NewDecoder(r.Body)

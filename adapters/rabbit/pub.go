@@ -29,9 +29,9 @@ func Publish(app *application.App) {
 		return
 	}
 
-	sendEmps, ersr := json.Marshal(emps)
-	if ersr != nil {
-		fmt.Println(ersr)
+	sendEmps, err := json.Marshal(emps)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -70,16 +70,16 @@ func Publish(app *application.App) {
 		fmt.Println(err)
 	}
 
-	json, err := json.Marshal(emps)
+	js, err := json.Marshal(emps)
 	if err != nil {
 		fmt.Println(err)
 	}
-	file, err := os.Create("adapters/rabbit/outputs/pub.json")
+	file, err := os.Create("../adapters/rabbit/outputs/pub.json")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	file.Write(json)
+	file.Write(js)
 	file.Close()
 	fmt.Println("Message Published")
 }

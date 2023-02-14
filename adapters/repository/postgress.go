@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -15,6 +16,9 @@ func CreateConnection() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+	db.SetMaxIdleConns(100)
+	db.SetMaxOpenConns(1000)
+	db.SetConnMaxLifetime(time.Minute * 5)
 
 	fmt.Println("Successfully connected!")
 

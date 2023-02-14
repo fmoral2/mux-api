@@ -80,6 +80,7 @@ func (r *EmployeePG) GetEmployeesDb() ([]model.Employee, error) {
 	return emps, nil
 
 }
+
 func (r *EmployeePG) GetEmployeesFilterDb(page int64, size int64) (interface{}, error) {
 	if size == 0 {
 		return model.PageResponse{}, nil
