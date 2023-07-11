@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-api-configmap
+  namespace: dev-env
+data:
+  POSTGRES_HOST: "postgres-service:5432"
+  RABBITMQ_HOST: "rabbit-service:5672"
+#  KAFKA_BROKER: "broker:9092"
+#  ZOOKEEPER: "zookeeper:2181"

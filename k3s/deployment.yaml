@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-api
+  namespace: dev-env
+  labels:
+    app: server-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-api
+  template:
+    metadata:
+      labels:
+        app: server-api
+    spec:
+      containers:
+        - name: server-api
+          image: morlfm/server:v1.1.0
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: server-api-configmap
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - "ALL"
+            # runAsNonRoot: false
+            seccompProfile:
+              type: "RuntimeDefault"
+          ports:
+            - containerPort: 8081
+      hostNetwork: true

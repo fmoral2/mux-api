@@ -1,6 +1,22 @@
 version: '3.8'
 
 services:
+  parser:
+    image: morlfm/parser:v1.0.1
+    restart: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    networks:
+      - m_network
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_BROKER: broker:9092
+      ZOOKEEPER: zookeeper:2181
+      RABBITMQ_HOST: rabbitmq:5672
+      POSTGRES_HOST: db:5432
+
   db:
     image: postgres:12-alpine
     container_name: employees
@@ -17,6 +33,67 @@ services:
     networks:
       - m_network
 
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.5.1
+  #   container_name: m_zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #       - m_network
+
+  # broker:
+  #   image: confluentinc/cp-kafka:7.5.1
+  #   container_name: mux_broker
+  #   ports:
+  #     - "9092:9092"
+  #   expose:
+  #     - '29092'
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  #   networks:
+  #     - m_network
+
+#   kafka:
+#     image:  confluentinc/cp-kafka:7.5.1
+#     container_name: mux-kafka
+#     restart: always
+#     depends_on:
+#       broker:
+#         condition: service_started
+#       zookeeper:
+#         condition: service_started
+#     entrypoint: [ '/bin/sh', '-c' ]
+#     command: |
+#       "
+#       # blocks until kafka is reachable
+#       kafka-topics --bootstrap-server broker:29092 --list
+
+#       echo -e 'Creating kafka topics'
+#       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic tmr-events --replication-factor 1 --partitions 1
+#       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic mr-event-log --replication-factor 1 --partitions 1
+
+#       echo -e 'Successfully created the following topics:'
+#       kafka-topics --bootstrap-server broker:29092 --list
+#       "
+#     environment:
+# #      - KAFKA_ADVERTISED_HOST_NAME=kafka
+# #      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+# #      - KAFKA_CREATE_TOPICS=employees:1:1
+# #      - TZ=UTC
+#       KAFKA_BROKER_ID: ignored
+#       KAFKA_ZOOKEEPER_CONNECT: ignored
+
+    # networks:
+    #   - m_network
 #  wiremock:
 #    image: wiremock/wiremock:2.32.0-alpine
 #    container_name: mux_wiremock
@@ -40,9 +117,33 @@ services:
       - TZ=UTC
     networks:
       - m_network
+
+  server:
+    image: morlfm/server:v1.1.0
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      # KAFKA_BROKER: broker:9092
+      # ZOOKEEPER: zookeeper:2181
+      RABBITMQ_HOST: rabbitmq:5672
+      POSTGRES_HOST: db:5432
+    networks:
+      - m_network
+
+
 volumes:
   repository:
     driver: local
+
 networks:
   m_network:
     driver: bridge

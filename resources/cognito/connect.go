@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/morlfm/rest-api/resources"
+	"github.com/fmoral2/mux-api/resources"
 )
 
 func Cognito() {

@@ -9,15 +9,15 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/morlfm/rest-api/adapters/rabbit"
-	application "github.com/morlfm/rest-api/application/employee"
-	"github.com/morlfm/rest-api/application/model"
-	checks "github.com/morlfm/rest-api/resources"
+
+	"github.com/fmoral2/mux-api/adapters/rabbit"
+	application "github.com/fmoral2/mux-api/application/employee"
+	"github.com/fmoral2/mux-api/application/model"
+	checks "github.com/fmoral2/mux-api/resources"
 )
 
 var (
 	emp model.Employee
-	// employees []model.Employee
 )
 
 func (a *EmpHandler) GetSingleEmployee(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +96,8 @@ func (a *EmpHandler) DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 func (a *EmpHandler) UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var err error
+
 	params := mux.Vars(r)
 	id := params["id"]
 	if _, err := uuid.Parse(id); err != nil {
@@ -105,9 +107,15 @@ func (a *EmpHandler) UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&emp); err != nil {
-		application.RespondWithError(w, http.StatusBadRequest, "Invalid resquest")
+		application.RespondWithError(w, http.StatusBadRequest, "Invalid request")
 	}
 	defer r.Body.Close()
+
+	err = model.EmptyRole(&emp)
+	if err != nil {
+		application.RespondWithError(w, http.StatusBadRequest, "role is required")
+		return
+	}
 
 	emp.ID = id
 	emps, err := a.app.UpdateEmployee(emp)
@@ -116,6 +124,7 @@ func (a *EmpHandler) UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go rabbit.MakeAppRb()
 	application.RespondWithJSON(w, http.StatusOK, emps)
 }
 
@@ -126,15 +135,15 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	if err := decoder.Decode(&emp); err != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "Invalid request")
 	}
-	r.Body.Close()
 
-	errs := model.EmptyName(&emp)
-	if errs != nil {
+	err := model.EmptyName(&emp)
+	if err != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "missing name")
 		return
 	}
-	e := model.EmptyRole(&emp)
-	if e != nil {
+
+	err = model.EmptyRole(&emp)
+	if err != nil {
 		application.RespondWithError(w, http.StatusBadRequest, "missing role")
 		return
 	}
@@ -146,10 +155,11 @@ func (a *EmpHandler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	emp.ID = id
 
-	r.Body.Close()
+	defer r.Body.Close()
 
-	rabbit.MakeAppRb()
 	application.RespondWithJSON(w, http.StatusCreated, emp)
+
+	go rabbit.MakeAppRb()
 }
 
 func getPageRequest(r *http.Request) (model.PageRequest, error) {

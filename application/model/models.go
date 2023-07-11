@@ -11,7 +11,6 @@ type Employee struct {
 }
 
 func EmptyName(emp *Employee) error {
-
 	if emp.Name == "" {
 		return errors.New("missing name")
 	}
@@ -19,7 +18,6 @@ func EmptyName(emp *Employee) error {
 }
 
 func EmptyRole(emp *Employee) error {
-
 	if emp.Role == "" {
 		return errors.New("missing role")
 	}

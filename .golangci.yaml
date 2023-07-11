@@ -32,7 +32,7 @@
        - name: imports-blacklist
          arguments: [ ]
        - name: line-length-limit
-         arguments: [ 86 ]
+         arguments: [ 120 ]
        - name: cyclomatic
          arguments: [ 7 ]
        - name: cognitive-complexity

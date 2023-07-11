@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/morlfm/rest-api/adapters/repository"
-	"github.com/morlfm/rest-api/application/model"
+	"github.com/fmoral2/mux-api/adapters/repository"
+	"github.com/fmoral2/mux-api/application/model"
 )
 
 type App struct {
@@ -52,7 +52,10 @@ func RespondWithError(w http.ResponseWriter, code int, message string) {
 }
 
 func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
+	response, err := json.Marshal(payload)
+	if err != nil {
+		return
+	}
 	w.WriteHeader(code)
 
 	w.Header().Set("Content-Type", "application/json")

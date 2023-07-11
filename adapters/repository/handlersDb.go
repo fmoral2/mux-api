@@ -6,8 +6,8 @@ import (
 	"log"
 	"math"
 
+	"github.com/fmoral2/mux-api/application/model"
 	"github.com/google/uuid"
-	"github.com/morlfm/rest-api/application/model"
 )
 
 const (

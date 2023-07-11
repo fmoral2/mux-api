@@ -10,10 +10,11 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/morlfm/rest-api/adapters/rabbit"
-	"github.com/morlfm/rest-api/adapters/repository"
-	application "github.com/morlfm/rest-api/application/employee"
-	api "github.com/morlfm/rest-api/ports/rest"
+
+	"github.com/fmoral2/mux-api/adapters/rabbit"
+	"github.com/fmoral2/mux-api/adapters/repository"
+	application "github.com/fmoral2/mux-api/application/employee"
+	api "github.com/fmoral2/mux-api/ports/rest"
 )
 
 func main() {
@@ -26,11 +27,7 @@ func main() {
 		log.Fatalf("Failed to create trace file: %v", err)
 	}
 
-	defer func() {
-		if err := f.Close(); err != nil {
-			log.Fatalf("Failed to close trace file: %v", err)
-		}
-	}()
+	defer f.Close()
 
 	err = trace.Start(f)
 	if err != nil {
@@ -38,7 +35,6 @@ func main() {
 	}
 	defer trace.Stop()
 
-	// //cognito.Cognito()
 	go func() {
 		for {
 			var ms runtime.MemStats
@@ -49,6 +45,8 @@ func main() {
 
 	db := repository.CreateConnection()
 	rep := repository.MakeRepository(db)
+
+	defer db.Close()
 
 	app := application.MakeApplication(rep)
 	rabbit.Publish(app)

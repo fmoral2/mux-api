@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/morlfm/rest-api/adapters/repository"
-	application "github.com/morlfm/rest-api/application/employee"
-	"github.com/morlfm/rest-api/application/model"
+	"github.com/fmoral2/mux-api/adapters/repository"
+	application "github.com/fmoral2/mux-api/application/employee"
+	"github.com/fmoral2/mux-api/application/model"
 
 	"github.com/streadway/amqp"
 )
@@ -19,26 +19,27 @@ var (
 
 func Publish(app *application.App) {
 	// connect rabbit via amqp
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	rabbitmqHost := os.Getenv("RABBITMQ_HOST")
+	host := fmt.Sprintf("amqp://guest:guest@%s/", rabbitmqHost)
+	conn, err := amqp.Dial(host)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
+	defer conn.Close()
 
 	emps, err := app.GetEmployees(emp)
 	if err != nil {
-		return
+		log.Fatalf("Failed to get employees: %v", err)
 	}
 
 	sendEmps, err := json.Marshal(emps)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("Failed to marshal employees: %v", err)
 	}
 
-	// checkING  connection
 	ch, err := conn.Channel()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Failed to open channel: %v", err)
 	}
 	defer ch.Close()
 
@@ -50,12 +51,12 @@ func Publish(app *application.App) {
 		false,
 		nil,
 	)
-
 	fmt.Println(q)
+
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Failed to declare queue: %v", err)
 	}
-	// publish a message
+
 	err = ch.Publish(
 		"",
 		"TestQueue",
@@ -67,21 +68,11 @@ func Publish(app *application.App) {
 		},
 	)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Failed to publish message: %v", err)
 	}
 
-	js, err := json.Marshal(emps)
-	if err != nil {
-		fmt.Println(err)
-	}
-	file, err := os.Create("../adapters/rabbit/outputs/pub.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer file.Close()
-	file.Write(js)
-	file.Close()
-	fmt.Println("Message Published")
+	fmt.Println("Message published")
+
 }
 
 func MakeAppRb() {

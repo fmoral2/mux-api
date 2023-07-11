@@ -1,8 +1,13 @@
 package api
 
 import (
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/fmoral2/mux-api/application/model"
+
 	"github.com/gorilla/mux"
-	"github.com/morlfm/rest-api/application/model"
 	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
@@ -28,10 +33,20 @@ func (a *EmpHandler) Routes(r *mux.Router) {
 		newrelic.ConfigLicense("8e192759449a29e8ab34f9b9a3e4354e7ca1NRAL"),
 		newrelic.ConfigAppLogForwardingEnabled(true),
 	)
+
 	r.HandleFunc(newrelic.WrapHandleFunc(appNew, "/api/employees", a.GetEmployees)).Methods("GET")
-	r.HandleFunc("/api/employees/filter", a.GetFilterEmployees).Methods("GET")
-	r.HandleFunc("/api/employees/{id}", a.GetSingleEmployee).Methods("GET")
-	r.HandleFunc("/api/employees/{id}", a.DeleteEmployee).Methods("DELETE")
-	r.HandleFunc("/api/employees/{id}", a.UpdateEmployee).Methods("PUT")
-	r.HandleFunc("/api/employees", a.CreateEmployee).Methods("POST")
+	r.Handle("/api/employees/filter", loggingMiddleware(http.HandlerFunc(a.GetFilterEmployees))).Methods("GET")
+	r.Handle("/api/employees/{id}", loggingMiddleware(http.HandlerFunc(a.GetSingleEmployee))).Methods("GET")
+	r.Handle("/api/employees/{id}", loggingMiddleware(http.HandlerFunc(a.DeleteEmployee))).Methods("DELETE")
+	r.Handle("/api/employees/{id}", loggingMiddleware(http.HandlerFunc(a.UpdateEmployee))).Methods("PUT")
+	r.Handle("/api/employees", loggingMiddleware(http.HandlerFunc(a.CreateEmployee))).Methods("POST")
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
+
+		next.ServeHTTP(w, r)
+		log.Printf("[%s] %s %s %v %v %v", r.Method, r.RequestURI, r.RemoteAddr, time.Since(startTime), r.Header.Get("User-Agent"), r.Body)
+	})
 }
