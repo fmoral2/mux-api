@@ -5,8 +5,6 @@ import { Rate } from "k6/metrics";
 new Rate("check_failure_rate");
 
 export const options = {
-//Stress Testing is a type of load testing used to determine the limits of the system.
-// The purpose of this test is to verify the stability and reliability of the system under extreme conditions.
   stages: [
 
     { duration: '2m', target: 100 }, // below normal load
